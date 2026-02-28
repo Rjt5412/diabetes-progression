@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+bin/
+lib/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Data & Artifacts
+# We ignore the raw data and binary model artifacts to keep the repo clean
+data/pima_diabetes.csv
+artifacts/*.pkl
+
+# OS
+.DS_Store
+
+# Planning & Problem Statement
+problem-statement.md
+implementation_plan.md
+AGENTS.md
+
+# Environments
+.env
+.venv
+.vscode/
+.idea/
