@@ -25,9 +25,9 @@ wheels/
 */.ipynb_checkpoints/*
 
 # Data & Artifacts
-# We ignore the raw data and binary model artifacts to keep the repo clean
-data/pima_diabetes.csv
-artifacts/*.pkl
+# We include the raw data and binary model artifacts as requested
+# data/pima_diabetes.csv
+# artifacts/*.pkl
 
 # OS
 .DS_Store
