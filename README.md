@@ -65,3 +65,7 @@ docker run -p 8501:8501 diabetes-risk-app
 - **Primary Metrics:** F0.5 Score (prioritizing Precision for clinical risk management).
 - **Explainability:** SHAP KernelExplainer used for interactive patient-level risk narratives.
 - **Fairness:** Audited across Age and BMI segments with demographic parity checks.
+
+## Dashboard Demo
+
+![App Demo](./demo.gif)
