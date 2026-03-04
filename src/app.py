@@ -37,8 +37,9 @@ explainer = get_shap_explainer(model, processed_data['X_train'])
 # UI Layout
 st.title("🩺 Diabetes Progression Risk Predictor")
 st.markdown("""
-Predicts the 1-year risk of diabetes progression into high-severity clinical states.
-*Risk scores represent the model's confidence in identifying future progression based on current metabolic markers.*
+Assesses diabetes progression risk based on current metabolic and physiological markers. 
+The risk score is a model-derived probability used to prioritise patients for 
+clinical review — it is not a diagnostic tool.
 """)
 
 # Feature Engineering
@@ -113,7 +114,7 @@ with tab_dashboard:
                 st.success("✅ LOW RISK IDENTIFIED")
                 
         with col2:
-            st.progress(prob)
+            st.progress(float(np.clip(prob, 0.0, 1.0)))
             st.caption(f"Decision Threshold: {opt_threshold:.2f}")
 
         # SHAP Explainability
@@ -121,7 +122,7 @@ with tab_dashboard:
         st.caption("How to interpret: 🔴 RED bars increase risk, 🟢 GREEN bars decrease risk relative to the average patient.", 
                    help="Values shown are SHAP (SHapley Additive exPlanations). They quantify how much each patient marker pushed the probability away from the base value (average risk).")
         
-        with st.spinner("Calculating feature contributions..."):
+        with st.spinner("Calculating feature contributions... (first run may take 15–20 seconds)"):
             shap_values = explainer.shap_values(processed_df, silent=True)
             current_shap = shap_values[0]
             
@@ -137,6 +138,7 @@ with tab_dashboard:
             ax.set_xlabel("Contribution to Risk Probability")
             ax.set_title("Feature Influence on this Prediction")
             st.pyplot(fig)
+            st.caption(f"Base rate (average patient risk): {explainer.expected_value:.1%}. SHAP values show how this patient's markers shift the prediction away from that baseline.")
 
         # Narrative explanation
         top_pos = shap_df[shap_df['Contribution'] > 0.01].sort_values(by='Contribution', ascending=False)
@@ -162,13 +164,14 @@ with tab_dashboard:
             if glucose < 100:
                 st.warning("**Normal Glucose Advisory:** High prediction variance for baseline glucose <100 mg/dL. Metabolic stability may mask progression markers.")
             if bmi < 25.0:
-                st.warning("**BMI Advisory:** Predictions for patients with BMI < 25.0 may be less accurate. This model is highly optimized for higher-BMI risk populations.")
+                st.warning("**BMI Advisory:** Patients with BMI below 25.0 are underrepresented in the training data — predictions for this group have higher uncertainty.")
 
 with tab_about:
     st.header("About the Diabetes Progression Risk Predictor")
     st.markdown("""
     ### 🎯 Objective
-    This tool is a prototype designed to predict the **1-year risk of diabetes progression**. 
+    This tool is a prototype designed to assess **diabetes onset risk** from current 
+    metabolic and physiological markers. 
     It uses a Support Vector Machine (SVM) model trained on the standard Pima Indians Diabetes Database to identify clinical markers correlated with metabolic deterioration.
 
     ### 📊 Dataset Reference
@@ -184,4 +187,4 @@ with tab_about:
     """)
 
 st.divider()
-st.caption("Developed for Clinical Decision Support Prototype | Pima Dataset Analysis")
+st.caption("Clinical Decision Support Prototype · Pima Indians Diabetes Database · Model: SVM (RBF) · Threshold: 0.374")
