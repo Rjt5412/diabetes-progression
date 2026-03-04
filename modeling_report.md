@@ -31,9 +31,11 @@ This project aims to predict the risk of diabetes progression using the Pima Ind
 The model was calibrated using Platt scaling to ensure that predicted probabilities reflect actual risk probabilities, which is crucial for clinician trust.
 
 ## 5. Fairness Audit
-We audited the model across Age and BMI groups:
-- **Demographic Parity**: Disparities were within acceptable bounds (<0.10) after threshold optimization.
-- **Reliability Flags**: The dashboard proactively flags predictions for demographics where the model has historically lower confidence (e.g., Age 60+, very low Glucose/BMI).
+We audited the model across Age, BMI, Pregnancy, and Glucose groups:
+- **Audit Findings**: While most segments showed consistent performance, certain demographic parity and equalized odds disparities exceeded the 0.10 threshold.
+- **Root Cause Analysis**: These disparities were primarily driven by small sample sizes in specific bins (e.g., only 3 patients in the Age 60+ category), making metrics volatile in those segments.
+- **Mitigation Strategy**: Automated mitigation (e.g., ThresholdOptimizer) was bypassed to avoid overfitting to sparse statistical noise. Instead, we implemented proactive **Reliability Flags**.
+- **Reliability Flags**: The dashboard explicitly warns clinicians when predictions are made for demographics with historically lower confidence (Age 60+, BMI < 25, or Glucose < 100).
 
 ## 6. Explainability (SHAP)
 Predictive transparency is achieved through:
