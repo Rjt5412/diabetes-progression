@@ -1,1 +1,3 @@
-{"optimal_threshold": 0.37, "model_type": "SVC"}
+{
+    "optimal_threshold": 0.37373737373737376
+}
